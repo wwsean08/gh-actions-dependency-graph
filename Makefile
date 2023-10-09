@@ -40,3 +40,4 @@ build:
 .PHONY: clean
 clean:
 	rm -rf dist
+	rm -f actions-dependency-graph

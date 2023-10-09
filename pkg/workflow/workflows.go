@@ -1,6 +1,7 @@
 package workflow
 
 import (
+	"github.com/wwsean08/actions-dependency-graph/pkg/common"
 	"gopkg.in/yaml.v3"
 	"io"
 	"os"
@@ -11,13 +12,7 @@ type Workflow struct {
 }
 
 type Job struct {
-	Steps []Step `yaml:"steps"`
-}
-
-type Step struct {
-	Uses *string `yaml:"uses"`
-	Name *string `yaml:"name"`
-	Id   *string `yaml:"id"`
+	Steps []*common.Step `yaml:"steps"`
 }
 
 func ParseWorkflow(file string) (*Workflow, error) {

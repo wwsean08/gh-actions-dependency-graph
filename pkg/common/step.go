@@ -1,9 +1,15 @@
-package workflow
+package common
 
 import (
 	"fmt"
 	"strings"
 )
+
+type Step struct {
+	Uses *string `yaml:"uses"`
+	Name *string `yaml:"name"`
+	Id   *string `yaml:"id"`
+}
 
 // GetRepo parses out the repo from the uses statement if there is one.
 func (s *Step) GetRepo() string {

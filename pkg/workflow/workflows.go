@@ -1,10 +1,11 @@
 package workflow
 
 import (
-	"github.com/wwsean08/actions-dependency-graph/pkg/common"
-	"gopkg.in/yaml.v3"
 	"io"
 	"os"
+
+	"github.com/wwsean08/actions-dependency-graph/pkg/common"
+	"sigs.k8s.io/yaml"
 )
 
 type Workflow struct {

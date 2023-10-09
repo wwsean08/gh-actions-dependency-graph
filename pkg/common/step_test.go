@@ -40,12 +40,12 @@ func TestStep_GetCommitishReturnsExpectedVersion(t *testing.T) {
 		step := Step{
 			Uses: &test.uses,
 		}
-		assert.Equal(t, test.expected, step.GetCommitish(), test.message)
+		assert.Equal(t, test.expected, step.GetGitRef(), test.message)
 	}
 
 	// Test that nil will return empty string
 	step := Step{}
-	assert.Equal(t, "", step.GetCommitish())
+	assert.Equal(t, "", step.GetGitRef())
 }
 
 func TestStep_GetRepoReturnsExpectedRepo(t *testing.T) {

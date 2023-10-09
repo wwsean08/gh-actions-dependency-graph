@@ -49,9 +49,9 @@ func (s *Step) GetRepoPath() string {
 	return strings.Join(repoInfoSplit[2:], "/")
 }
 
-// GetCommitish gets the commitish (sha, branch, or tag) for an action
+// GetGitRef gets the commitish (sha, branch, or tag) for an action
 // if there is a "uses" statement for a remote repo
-func (s *Step) GetCommitish() string {
+func (s *Step) GetGitRef() string {
 	if s.Uses == nil || *s.Uses == "" {
 		return ""
 	}

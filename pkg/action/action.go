@@ -1,12 +1,16 @@
 package action
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
 
+	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/wwsean08/actions-dependency-graph/pkg/common"
 	"sigs.k8s.io/yaml"
 )
@@ -35,7 +39,12 @@ func ParseAction(file string) (*Action, error) {
 	}
 	defer r.Close()
 
-	data, err := io.ReadAll(r)
+	return parseAction(r)
+}
+
+// parseAction takes in a reader and returns an action or error if one occurs while reading/parsing
+func parseAction(reader io.Reader) (*Action, error) {
+	data, err := io.ReadAll(reader)
 	if err != nil {
 		return nil, err
 	}
@@ -47,8 +56,69 @@ func ParseAction(file string) (*Action, error) {
 
 // GetActionFromRepoPath downloads the action.yaml file from a repository at a specific
 // git ref and parses it into an Action struct
-func GetActionFromRepoPath(owner, repo, ref, path string) (*Action, error) {
-	return nil, errors.New("TODO: Implement")
+func GetActionFromRepoPath(repo, ref, path string) (*Action, error) {
+	dlUrl, err := getActionFromRepoPath(repo, ref, fmt.Sprintf("%s/action.yml", path))
+	if err != nil {
+		dlUrl, err = getActionFromRepoPath(repo, ref, fmt.Sprintf("%s/action.yaml", path))
+		if err != nil {
+			return nil, errors.Join(fmt.Errorf("unable to find action at either %s/action.yaml or %s/action.yml in repo %s at ref %s", path, path, repo, ref), err)
+		}
+	}
+
+	resp, err := http.Get(*dlUrl)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return parseAction(resp.Body)
+}
+
+// getActionFromRepoPath takes care of the nitty-gritty API calls to get the action file URL
+func getActionFromRepoPath(repo, ref, path string) (*string, error) {
+	// https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
+	client, err := api.DefaultHTTPClient()
+	if err != nil {
+		return nil, err
+	}
+
+	type contentsData struct {
+		DownloadURL string `json:"download_url"`
+	}
+
+	// Create request
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://api.github.com/repos/%s/contents%s", repo, path), nil)
+	if err != nil {
+		return nil, err
+	}
+	// Set headers
+	req.Header.Set("Content-Type", "application/vnd.github.raw")
+	req.Header.Set("X-GitHub-Api-Version", "2022-11-28")
+
+	// Set query param
+	q := req.URL.Query()
+	q.Add("ref", ref)
+	req.URL.RawQuery = q.Encode()
+
+	// Perform request
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, fmt.Errorf("unable to find %s in github repo@ref %s@%s", path, repo, ref)
+	}
+
+	respData := new(contentsData)
+	respBody, err := io.ReadAll(resp.Body)
+
+	err = json.Unmarshal(respBody, respData)
+	if err != nil {
+		return nil, err
+	}
+
+	return &respData.DownloadURL, nil
 }
 
 // IsComposite returns true if the Action is a composite action

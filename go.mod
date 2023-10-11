@@ -4,6 +4,7 @@ go 1.21.1
 
 require (
 	github.com/cli/go-gh/v2 v2.3.0
+	github.com/h2non/gock v1.2.0
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
 	sigs.k8s.io/yaml v1.3.0
@@ -14,6 +15,7 @@ require (
 	github.com/cli/safeexec v1.0.0 // indirect
 	github.com/cli/shurcooL-graphql v0.0.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/h2non/parth v0.0.0-20190131123155-b4df798d6542 // indirect
 	github.com/henvic/httpretty v0.0.6 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/kr/text v0.1.0 // indirect

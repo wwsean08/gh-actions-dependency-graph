@@ -44,6 +44,9 @@ func ParseAction(file string) (*Action, error) {
 
 // parseAction takes in a reader and returns an action or error if one occurs while reading/parsing
 func parseAction(reader io.Reader) (*Action, error) {
+	if reader == nil {
+		return nil, fmt.Errorf("reader cannot be nil")
+	}
 	data, err := io.ReadAll(reader)
 	if err != nil {
 		return nil, err

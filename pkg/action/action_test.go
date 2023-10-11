@@ -1,6 +1,10 @@
 package action
 
 import (
+	"fmt"
+	"github.com/h2non/gock"
+	"net/http"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,6 +13,12 @@ import (
 
 func TestParseActionReturnsErrOnNonexistentFile(t *testing.T) {
 	action, err := ParseAction("testdata/non-existent-file.404")
+	require.Error(t, err)
+	require.Nil(t, action)
+}
+
+func TestPrivateParseActionReturnsErrOnNil(t *testing.T) {
+	action, err := parseAction(nil)
 	require.Error(t, err)
 	require.Nil(t, action)
 }
@@ -208,4 +218,120 @@ func TestAction_GetNodeVersion(t *testing.T) {
 		}
 		assert.Equal(t, test.expected, version)
 	}
+}
+
+func TestPrivateGetActionFromRepoPathReturnsErrOn404(t *testing.T) {
+	defer gock.Off()
+	gock.New("https://api.github.com").
+		Get("/repos/wwsean08/actions-dependency-graph/contents/action.yaml").
+		Reply(http.StatusNotFound)
+
+	dlUrl, err := getActionFromRepoPath("wwsean08/actions-dependency-graph", "main", "/action.yaml")
+	assert.EqualError(t, err, "unable to find /action.yaml in github repo@ref wwsean08/actions-dependency-graph@main")
+	assert.Nil(t, dlUrl)
+}
+
+func TestPrivateGetActionFromRepoPathReturnsErrOnHttpError(t *testing.T) {
+	defer gock.Off()
+	gock.New("https://api.github.com").
+		Get("/repos/wwsean08/actions-dependency-graph/contents/action.yaml").
+		ReplyError(fmt.Errorf("fake http error"))
+
+	dlUrl, err := getActionFromRepoPath("wwsean08/actions-dependency-graph", "main", "/action.yaml")
+	assert.ErrorContains(t, err, "fake http error")
+	assert.Nil(t, dlUrl)
+}
+
+func TestGetActionFromRepoPathReturnsErrorOnNotFoundTwice(t *testing.T) {
+	defer gock.Off()
+
+	gock.New("https://api.github.com").
+		Get("repos/actions/checkout/contents/action.yml").
+		Reply(http.StatusNotFound)
+
+	gock.New("https://api.github.com").
+		Get("repos/actions/checkout/contents/action.yaml").
+		Reply(http.StatusNotFound)
+
+	action, err := GetActionFromRepoPath("actions/checkout", "", "")
+	assert.ErrorContains(t, err, "unable to find action at")
+	assert.Nil(t, action)
+}
+
+func TestPrivateGetActionFromRepoPathReturnsValidData(t *testing.T) {
+	defer gock.Off()
+
+	data, err := os.Open("testdata/sample-get-contents-response.json")
+	require.NoError(t, err)
+	require.NotNil(t, data)
+
+	gock.New("https://api.github.com").
+		Get("repos/actions/checkout/contents/action.yml").
+		Reply(http.StatusOK).
+		Body(data)
+
+	dlUrl, err := getActionFromRepoPath("actions/checkout", "", "/action.yml")
+	assert.NoError(t, err)
+	assert.NotNil(t, dlUrl)
+	assert.Equal(t, "https://raw.githubusercontent.com/actions/checkout/main/action.yml", *dlUrl)
+}
+
+func TestGetActionFromRepoPathReturnsValidDataForDotYml(t *testing.T) {
+	defer gock.Off()
+
+	getContentData, err := os.Open("testdata/sample-get-contents-response.json")
+	require.NoError(t, err)
+	require.NotNil(t, getContentData)
+
+	actionData, err := os.Open("testdata/js-example.yaml")
+	require.NoError(t, err)
+	require.NotNil(t, actionData)
+
+	gock.New("https://api.github.com").
+		Get("repos/actions/checkout/contents/action.yml").
+		Reply(http.StatusOK).
+		Body(getContentData)
+
+	gock.New("https://raw.githubusercontent.com").
+		Get("/actions/checkout/main/action.yml").
+		Reply(http.StatusOK).
+		Body(actionData)
+
+	action, err := GetActionFromRepoPath("actions/checkout", "", "")
+	assert.NoError(t, err)
+	assert.NotNil(t, action)
+	assert.True(t, action.IsJavascript())
+	assert.Equal(t, "Hello World", *action.Name)
+}
+
+func TestGetActionFromRepoPathReturnsValidDataForDotYaml(t *testing.T) {
+	defer gock.Off()
+
+	getContentData, err := os.Open("testdata/sample-get-contents-response.json")
+	require.NoError(t, err)
+	require.NotNil(t, getContentData)
+
+	actionData, err := os.Open("testdata/js-example.yaml")
+	require.NoError(t, err)
+	require.NotNil(t, actionData)
+
+	gock.New("https://api.github.com").
+		Get("repos/actions/checkout/contents/action.yml").
+		Reply(http.StatusNotFound)
+
+	gock.New("https://api.github.com").
+		Get("repos/actions/checkout/contents/action.yaml").
+		Reply(http.StatusOK).
+		Body(getContentData)
+
+	gock.New("https://raw.githubusercontent.com").
+		Get("/actions/checkout/main/action.yml").
+		Reply(http.StatusOK).
+		Body(actionData)
+
+	action, err := GetActionFromRepoPath("actions/checkout", "", "")
+	assert.NoError(t, err)
+	assert.NotNil(t, action)
+	assert.True(t, action.IsJavascript())
+	assert.Equal(t, "Hello World", *action.Name)
 }

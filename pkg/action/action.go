@@ -17,9 +17,11 @@ import (
 
 // Action a simplistic representation of a GitHub Action
 type Action struct {
-	Name        *string    `yaml:"name"`
-	Description *string    `yaml:"description"`
-	Runs        *RunsBlock `yaml:"runs"`
+	Name             *string    `yaml:"name"`
+	Description      *string    `yaml:"description"`
+	Runs             *RunsBlock `yaml:"runs"`
+	Repo             string
+	DependentActions []*Action
 }
 
 // RunsBlock represents the runs section of a GitHub Action
@@ -74,7 +76,12 @@ func GetActionFromRepoPath(repo, ref, path string) (*Action, error) {
 	}
 	defer resp.Body.Close()
 
-	return parseAction(resp.Body)
+	action, err := parseAction(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	action.Repo = repo
+	return action, nil
 }
 
 // getActionFromRepoPath takes care of the nitty-gritty API calls to get the action file URL
@@ -153,4 +160,38 @@ func (a *Action) GetNodeVersion() (int, error) {
 // IsDocker returns true is the Action is a docker action
 func (a *Action) IsDocker() bool {
 	return a.Runs.Using == "docker"
+}
+
+// GetDependentActions recursively retrieves the dependent actions to generate a graph of dependencies
+func (a *Action) GetDependentActions() error {
+	if !a.IsComposite() {
+		return NoDependenciesError{msg: "action is not a composite action, and so has no dependent actions"}
+	}
+	a.DependentActions = make([]*Action, 0)
+	for _, step := range a.Runs.Steps {
+		if step.Uses == nil {
+			// this isn't calling another action, but defining code in line, skip
+			continue
+		}
+
+		// at this point we know that there is an action call
+		repo, path, ref, err := step.ParseUses()
+		if err != nil {
+			return err
+		}
+
+		action, err := GetActionFromRepoPath(repo, ref, path)
+		if err != nil {
+			return err
+		}
+		a.DependentActions = append(a.DependentActions, action)
+		err = action.GetDependentActions()
+		if err != nil {
+			// Ignore No Dependencies Error as that is expected eventually
+			if _, ok := err.(NoDependenciesError); !ok {
+				return err
+			}
+		}
+	}
+	return nil
 }

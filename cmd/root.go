@@ -1,10 +1,6 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
-	"github.com/wwsean08/actions-dependency-graph/workflow"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -19,18 +15,10 @@ the list of dependent actions so you can feel confident in what you're shipping 
 allow you to identify problematic actions that you may want to avoid.'`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) {
-		wf, err := workflow.ParseWorkflow("/Users/sean/git/actions-dependency-graph/.github/workflows/pr.yaml")
-		if err != nil {
-			println(err.Error())
-			os.Exit(1)
-		}
-		for _, step := range wf.Jobs["test"].Steps {
-			if step.Uses != nil {
-				println(*step.Uses)
-			}
-		}
-	},
+
+	//Run: func(cmd *cobra.Command, args []string) {
+	//
+	//},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

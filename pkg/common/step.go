@@ -20,7 +20,7 @@ func (s *Step) GetRepo() string {
 
 	// this is a local action within the current repo
 	if strings.HasPrefix(uses, "./") {
-		// TODO: Figure out how to handle this situation
+		return ""
 	}
 
 	uses = strings.Split(uses, "@")[0]
@@ -59,4 +59,18 @@ func (s *Step) GetGitRef() string {
 		return strings.Split(*s.Uses, "@")[1]
 	}
 	return ""
+}
+
+// ParseUses parses the step's uses block and returns the git repo, the repo path,
+// the git ref, and an error if something goes wrong parsing it.
+func (s *Step) ParseUses() (repo string, path string, ref string, err error) {
+	if s.Uses == nil || *s.Uses == "" {
+		err = fmt.Errorf("uses statement is null or blank, nothing to parse")
+		return
+	}
+
+	repo = s.GetRepo()
+	path = s.GetRepoPath()
+	ref = s.GetGitRef()
+	return
 }

@@ -1,0 +1,36 @@
+name: Pull Request
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+      - uses: cloudposse/github-action-preview-labels-cleanup@main
+
+      - name: Run tests
+        run: |
+          go fmt ./...
+          go vet ./...
+          go test -coverprofile coverage.out ./...
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: go.sum
+      - uses: cloudposse/github-action-preview-labels-cleanup@renovate/actions-checkout-4.x
+
+      - name: Run tests
+        run: |
+          go fmt ./...
+          go vet ./...
+          go test -coverprofile coverage.out ./...

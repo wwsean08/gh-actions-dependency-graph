@@ -29,7 +29,9 @@ test:
 .PHONY: test/cover
 test/cover:
 	go test -v -race -buildvcs -coverprofile=/tmp/coverage.out ./...
+ifndef CI
 	go tool cover -html=/tmp/coverage.out
+endif
 
 ## build: build the application
 .PHONY: build

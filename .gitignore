@@ -22,3 +22,6 @@ go.work
 actions-dependency-graph
 
 dist/
+
+# Default name of the output from this app
+deps.graphviz

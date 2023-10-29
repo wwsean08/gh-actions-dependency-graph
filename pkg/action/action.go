@@ -21,6 +21,8 @@ type Action struct {
 	Description      *string    `yaml:"description"`
 	Runs             *RunsBlock `yaml:"runs"`
 	Repo             string
+	Ref              string
+	Path             string
 	DependentActions []*Action
 }
 
@@ -81,6 +83,8 @@ func GetActionFromRepoPath(repo, ref, path string) (*Action, error) {
 		return nil, err
 	}
 	action.Repo = repo
+	action.Ref = ref
+	action.Path = path
 	return action, nil
 }
 

@@ -54,6 +54,7 @@ var listDepsCmd = &cobra.Command{
 					fmt.Printf("no dependencies for this action\n")
 					continue
 				}
+				act.DFSPrint(1)
 			}
 		}
 

@@ -29,6 +29,11 @@ func (a *Action) generateGraph(parent *cgraph.Node, parentGraph, jobGraph *cgrap
 	if err != nil {
 		return err
 	}
+	if a.IsJavascript() {
+		act.SetColor("green")
+	} else if a.IsDocker() {
+		act.SetColor("blue")
+	}
 
 	if parent != nil {
 		_, err = jobGraph.CreateEdge("", parent, act)

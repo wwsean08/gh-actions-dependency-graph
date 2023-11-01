@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/wwsean08/actions-dependency-graph/pkg/action"
 	"github.com/wwsean08/actions-dependency-graph/pkg/scanner"
@@ -22,7 +23,24 @@ var scanCmd = &cobra.Command{
 			return fmt.Errorf("one input required, the workflow to analyze")
 		}
 		_, err := os.Stat(args[0])
-		return err
+		if err != nil {
+			return err
+		}
+
+		outputMode, err := cmd.Flags().GetString("output")
+		if err != nil {
+			return err
+		}
+
+		switch outputMode {
+		case "text":
+			break
+		case "json":
+			break
+		default:
+			return errors.New("output flag must be either text or json")
+		}
+		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		wf, err := workflow.ParseWorkflow(args[0])

@@ -13,6 +13,7 @@ type Scanner struct {
 }
 
 type Results struct {
+	Action         string
 	NodeVersionEOL string
 }
 
@@ -24,6 +25,10 @@ func NewDefaultScanner() *Scanner {
 
 func (s *Scanner) Scan(action *action.Action) (results *Results, errs []error) {
 	results = new(Results)
+	results.Action = fmt.Sprintf("%s/%s@%s", action.Repo, action.Path, action.Ref)
+	if action.Path == "" {
+		results.Action = fmt.Sprintf("%s@%s", action.Repo, action.Ref)
+	}
 	if s.ScanNodeVersionEOL {
 		eol, err := s.IsNodeVersionEOL(action)
 		if err != nil && !errors.Is(err, NotApplicableError) {

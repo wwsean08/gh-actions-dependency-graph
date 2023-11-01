@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/wwsean08/actions-dependency-graph/pkg/action"
 	"github.com/wwsean08/actions-dependency-graph/pkg/scanner"
@@ -29,8 +30,13 @@ var scanCmd = &cobra.Command{
 			return err
 		}
 		scan := scanner.NewDefaultScanner()
+		allResults := map[string][]scanner.Results{}
+		outputMode, err := cmd.Flags().GetString("output")
+		if err != nil {
+			return err
+		}
+
 		for key, val := range wf.Jobs {
-			fmt.Printf("Scanning for job %s\n", key)
 			for _, step := range val.Steps {
 				repo, path, ref, err := step.ParseUses()
 				if err != nil {
@@ -47,14 +53,34 @@ var scanCmd = &cobra.Command{
 						return err
 					}
 				}
-				fmt.Printf("Scanning %s/%s@%s\n", act.Repo, act.Path, act.Ref)
+
+				if outputMode == "text" {
+					fmt.Printf("Scanning %s/%s@%s\n", act.Repo, act.Path, act.Ref)
+				}
 				results, errs := scan.Scan(act)
 				if len(errs) != 0 {
 					fmt.Printf("Errors occured scanning action %s/%s@%s: %v", act.Repo, act.Path, act.Ref, errs)
 				}
-				fmt.Print(scan.FormatResults(results))
+				allResults[key] = append(allResults[key], *results)
 			}
-			fmt.Println()
+		}
+
+		switch outputMode {
+		case "json":
+			resultBytes, err := json.Marshal(allResults)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("%s", resultBytes)
+		case "text":
+			for key, val := range allResults {
+				fmt.Printf("Results for %s job\n", key)
+				for _, result := range val {
+					fmt.Printf("Results for %s\n", result.Action)
+					fmt.Println(scan.FormatResults(&result))
+				}
+				fmt.Println()
+			}
 		}
 
 		return nil
@@ -64,13 +90,5 @@ var scanCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(scanCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// scanCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// scanCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	scanCmd.Flags().StringP("output", "o", "text", "Used to set the output to text or json.  Acceptable values: [\"text\", \"json\"].")
 }

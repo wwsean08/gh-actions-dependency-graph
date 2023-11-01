@@ -37,10 +37,8 @@ func (a *Action) generateGraph(parent *cgraph.Node, parentGraph, jobGraph *cgrap
 	}
 
 	if a.IsJavascript() {
-		act.SetColor("green")
 		act.SetLabel(fmt.Sprintf("%s\n%s", label, a.Runs.Using))
 	} else if a.IsDocker() {
-		act.SetColor("blue")
 		if a.Runs.Image == nil {
 			act.SetLabel(label)
 		} else {

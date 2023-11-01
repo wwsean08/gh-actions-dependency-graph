@@ -29,10 +29,27 @@ func (a *Action) generateGraph(parent *cgraph.Node, parentGraph, jobGraph *cgrap
 	if err != nil {
 		return err
 	}
+
+	label := fmt.Sprintf("%s@%s", a.Repo, a.Ref)
+
+	if a.Path != "" {
+		label = fmt.Sprintf("%s/%s@%s", a.Repo, a.Path, a.Ref)
+	}
+
 	if a.IsJavascript() {
 		act.SetColor("green")
+		act.SetLabel(fmt.Sprintf("%s\n%s", label, a.Runs.Using))
 	} else if a.IsDocker() {
 		act.SetColor("blue")
+		if a.Runs.Image == nil {
+			act.SetLabel(label)
+		} else {
+			dockerfile := "local Dockerfile"
+			if *a.Runs.Image != "Dockerfile" {
+				dockerfile = *a.Runs.Image
+			}
+			act.SetLabel(fmt.Sprintf("%s\n%s", label, dockerfile))
+		}
 	}
 
 	if parent != nil {

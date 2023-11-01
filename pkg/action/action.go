@@ -30,6 +30,7 @@ type Action struct {
 type RunsBlock struct {
 	Using string         `yaml:"using"`
 	Steps []*common.Step `yaml:"steps"`
+	Image *string        `yaml:"image"`
 }
 
 // ParseAction parses an action file and returns an Action.

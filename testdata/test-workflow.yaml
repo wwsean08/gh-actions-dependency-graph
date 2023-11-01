@@ -35,6 +35,7 @@ jobs:
           go vet ./...
           go test -coverprofile coverage.out ./...
 
+      # Image built at runtime
       - name: Deploy
         uses: cloudposse/github-action-deploy-helmfile@main
         id: deploy
@@ -47,3 +48,16 @@ jobs:
           image-tag: latest
           operation: deploy
           debug: false
+
+      # Pre-built docker image
+      - name: 'Terragrunt Format'
+        uses: yardbirdsax/terragrunt-github-actions@main
+        with:
+          tf_actions_version: ${{ env.tf_version }}
+          tg_actions_version: ${{ env.tg_version }}
+          tf_actions_binary: 'terraform'
+          tf_actions_subcommand: 'fmt'
+          tf_actions_working_dir: ${{ env.tf_working_dir }}
+          tf_actions_comment: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

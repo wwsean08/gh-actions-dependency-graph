@@ -34,3 +34,16 @@ jobs:
           go fmt ./...
           go vet ./...
           go test -coverprofile coverage.out ./...
+
+      - name: Deploy
+        uses: cloudposse/github-action-deploy-helmfile@main
+        id: deploy
+        with:
+          aws-region: us-west-2
+          cluster: preview-eks
+          environment: preview
+          namespace: preview
+          image: nginx
+          image-tag: latest
+          operation: deploy
+          debug: false

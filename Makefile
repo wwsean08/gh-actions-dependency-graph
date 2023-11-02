@@ -36,8 +36,7 @@ endif
 ## build: build the application
 .PHONY: build
 build:
-	# Include additional build steps, like TypeScript, SCSS or Tailwind compilation here...
-	goreleaser build --single-target --snapshot --clean
+	go build
 
 .PHONY: clean
 clean:

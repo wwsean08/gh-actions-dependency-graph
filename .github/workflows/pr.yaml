@@ -11,6 +11,9 @@ jobs:
         with:
           go-version-file: go.mod
           cache-dependency-path: go.sum
+      - name: debug
+        run: |
+          gh auth status
 
       - name: Run tests
         run: |

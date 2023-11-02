@@ -14,8 +14,6 @@ jobs:
           cache-dependency-path: go.sum
       - name: Run tests
         run: |
-          unset GITHUB_TOKEN
-          unset GH_TOKEN
           make test/cover
 
   build:

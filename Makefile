@@ -23,12 +23,12 @@ audit:
 ## test: run all tests
 .PHONY: test
 test:
-	go test -v -race -buildvcs ./...
+	GH_TOKEN= GITHUB_TOKEN= go test -v -race -buildvcs ./...
 
 ## test/cover: run all tests and display coverage
 .PHONY: test/cover
 test/cover:
-	go test -v -race -buildvcs -coverprofile=/tmp/coverage.out ./...
+	GH_TOKEN= GITHUB_TOKEN= go test -v -race -buildvcs -coverprofile=/tmp/coverage.out ./...
 ifndef CI
 	go tool cover -html=/tmp/coverage.out
 endif

@@ -2,9 +2,10 @@ package scanner
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/wwsean08/actions-dependency-graph/pkg/action"
-	"testing"
 )
 
 func TestIsNodeVersionEOL(t *testing.T) {

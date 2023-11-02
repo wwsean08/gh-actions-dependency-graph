@@ -2,11 +2,11 @@ package action
 
 import (
 	"fmt"
-	"github.com/h2non/gock"
 	"net/http"
 	"os"
 	"testing"
 
+	"github.com/h2non/gock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

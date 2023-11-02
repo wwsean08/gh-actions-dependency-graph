@@ -15,7 +15,7 @@ archives:
   - format: binary
     name_template: "{{ .Os }}-{{ .Arch }}"
 checksum:
-  name_template: 'checksums.txt'
+  name_template: 'checksums-darwin.txt'
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 changelog:

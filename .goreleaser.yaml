@@ -22,6 +22,10 @@ builds:
       # Fails due to no such instruction errors (mostly)
       - goos: linux
         goarch: arm64
+      # Fails due to unrecognized command-line option '-marm'
+      - goos: linux
+        goarch: arm
+        goarm: 6
 archives:
   - format: binary
     name_template: "{{ .Os }}-{{ .Arch }}"

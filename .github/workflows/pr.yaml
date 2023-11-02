@@ -28,8 +28,7 @@ jobs:
           cache-dependency-path: go.sum
       - name: debug
         run: |
-          sudo apt-get -y install gcc-aarch64-linux-gnu
-          sudo apt-get -y install gcc-mingw-w64
+          sudo apt-get -y install gcc-aarch64-linux-gnu gcc-mingw-w64
       - uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser

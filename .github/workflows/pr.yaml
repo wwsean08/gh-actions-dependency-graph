@@ -13,6 +13,8 @@ jobs:
           cache-dependency-path: go.sum
 
       - name: Run tests
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           go fmt ./...
           go vet ./...

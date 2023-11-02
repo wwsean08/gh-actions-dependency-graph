@@ -10,7 +10,7 @@ builds:
       - CC_linux_amd64=clang-15
       - CC_darwin_amd64=o64-clang
       - CC_darwin_arm64=aarch64-apple-darwin20.2-clang
-      - CC_windows_amd64=gcc-mingw-w64
+      - CC_windows_amd64=x86_64-w64-mingw32-gcc
       - 'CC={{ index .Env (print "CC_" .Os "_" .Arch) }}'
     goos:
       - linux

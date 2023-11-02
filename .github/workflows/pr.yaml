@@ -33,3 +33,8 @@ jobs:
           args: build --snapshot --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: builds
+          path: dist/*

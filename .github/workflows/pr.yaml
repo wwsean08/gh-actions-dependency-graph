@@ -28,8 +28,7 @@ jobs:
           cache-dependency-path: go.sum
       - name: debug
         run: |
-          which -a clang
-          clang --version
+          ls /usr/bin/clang*
       - uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser

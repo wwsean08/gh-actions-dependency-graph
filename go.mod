@@ -6,6 +6,7 @@ require (
 	github.com/cli/go-gh/v2 v2.3.0
 	github.com/goccy/go-graphviz v0.1.1
 	github.com/h2non/gock v1.2.0
+	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
 	sigs.k8s.io/yaml v1.3.0
@@ -26,7 +27,6 @@ require (
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/muesli/termenv v0.13.0 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

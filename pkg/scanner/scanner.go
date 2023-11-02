@@ -10,16 +10,20 @@ import (
 
 type Scanner struct {
 	ScanNodeVersionEOL bool
+	RepoJackingScan    bool
 }
 
 type Results struct {
-	Action         string
-	NodeVersionEOL string
+	Action              string
+	NodeVersionEOL      string
+	RepoJackingPossible string
+	RepoJackingComment  string
 }
 
 func NewDefaultScanner() *Scanner {
 	return &Scanner{
 		ScanNodeVersionEOL: true,
+		RepoJackingScan:    true,
 	}
 }
 
@@ -39,6 +43,19 @@ func (s *Scanner) Scan(action *action.Action) (results *Results, errs []error) {
 			results.NodeVersionEOL = fmt.Sprintf("%t", eol)
 		}
 	}
+
+	if s.RepoJackingScan {
+		rjResult := s.RepoJackingCheck(action.Repo)
+		if rjResult.err != nil {
+			results.RepoJackingPossible = "unknown"
+			results.RepoJackingComment = rjResult.err.Error()
+		} else if rjResult.susceptible {
+			results.RepoJackingPossible = "true"
+			results.RepoJackingComment = fmt.Sprintf("Repo jacking possible.  %s has been moved and is now accessible via %s", rjResult.original, rjResult.new)
+		} else {
+			results.RepoJackingPossible = "false"
+		}
+	}
 	return results, nil
 }
 
@@ -47,6 +64,16 @@ func (s *Scanner) FormatResults(results *Results) string {
 	_, _ = sb.WriteString("Node Version EOL: ")
 	if s.ScanNodeVersionEOL {
 		sb.WriteString(fmt.Sprintf("%s\n", results.NodeVersionEOL))
+	} else {
+		sb.WriteString("Not Scanned\n")
+	}
+
+	sb.WriteString("Repo Jacking Possible: ")
+	if s.RepoJackingScan {
+		sb.WriteString(fmt.Sprintf("%s\n", results.RepoJackingPossible))
+		if results.RepoJackingComment != "" {
+			sb.WriteString(fmt.Sprintf("%s\n", results.RepoJackingComment))
+		}
 	} else {
 		sb.WriteString("Not Scanned\n")
 	}

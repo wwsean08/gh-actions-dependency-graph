@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wwsean08/actions-dependency-graph/pkg/action"
-	"github.com/wwsean08/actions-dependency-graph/pkg/scanner"
-	"github.com/wwsean08/actions-dependency-graph/pkg/workflow"
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/wwsean08/actions-dependency-graph/pkg/action"
+	"github.com/wwsean08/actions-dependency-graph/pkg/scanner"
+	"github.com/wwsean08/actions-dependency-graph/pkg/workflow"
 )
 
 // scanCmd represents the scan command

@@ -6,19 +6,11 @@ before:
 builds:
   - env:
       - CGO_ENABLED=1
-      - CC_linux_arm64=aarch64-linux-gnu-gcc
-      - CC_linux_amd64=clang-15
-      - CC_windows_amd64=x86_64-w64-mingw32-gcc
-      - 'CC={{ index .Env (print "CC_" .Os "_" .Arch) }}'
     goos:
-      - linux
-      - windows
+      - darwin
     goarch:
       - amd64
       - arm64
-    ignore:
-      - goos: windows
-        goarch: arm64
 archives:
   - format: binary
     name_template: "{{ .Os }}-{{ .Arch }}"

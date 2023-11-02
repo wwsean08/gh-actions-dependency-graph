@@ -33,7 +33,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: build --snapshot --clean --id non-darwin
+          args: build --snapshot --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: upload build artifacts
@@ -54,7 +54,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: build --snapshot --clean --id darwin
+          args: build --snapshot --clean --config .goreleaser-darwin.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: upload build artifacts

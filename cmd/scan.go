@@ -17,7 +17,9 @@ var scanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Perform a basic security scan, looking for potential issues",
 	Long: `This security scan looks for the following issues:
-1. EOL versions of NodeJS like node 16.`,
+1. EOL versions of NodeJS like node 16.
+2. If the repo is susceptible to repo-jacking, https://blog.aquasec.com/github-dataset-research-reveals-millions-potentially-vulnerable-to-repojacking
+`,
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 1 {
 			return fmt.Errorf("one input required, the workflow to analyze")

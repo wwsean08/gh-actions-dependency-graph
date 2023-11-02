@@ -15,6 +15,7 @@ jobs:
       - name: Run tests
         run: |
           unset GITHUB_TOKEN
+          unset GH_TOKEN
           make test/cover
 
   build:

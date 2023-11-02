@@ -20,6 +20,9 @@ jobs:
 
   build-non-mac:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
     needs:
       - test
     steps:
@@ -38,14 +41,12 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: builds-non-mac
-          path: dist/*
 
   build-mac:
     runs-on: macos-latest
+    permissions:
+      packages: write
+      contents: read
     needs:
       - test
     steps:
@@ -58,11 +59,6 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: build --snapshot --clean --config .goreleaser-darwin.yaml
+          args: release --clean --config .goreleaser-darwin.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: builds-mac
-          path: dist/*

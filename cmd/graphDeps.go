@@ -78,5 +78,4 @@ func init() {
 	rootCmd.AddCommand(graphDepsCmd)
 
 	graphDepsCmd.Flags().StringP("output", "o", "deps.graphviz", "Used to specify the output file for the GraphViz file")
-	_ = graphDepsCmd.MarkFlagRequired("output")
 }

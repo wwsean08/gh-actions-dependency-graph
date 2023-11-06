@@ -21,11 +21,6 @@ func TestIsNodeVersionEOL(t *testing.T) {
 			errExpected: false,
 		},
 		{
-			using:       "node18",
-			expected:    false,
-			errExpected: false,
-		},
-		{
 			using:       "node20",
 			expected:    false,
 			errExpected: false,

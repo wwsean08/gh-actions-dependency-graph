@@ -14,5 +14,5 @@ func (s *Scanner) IsNodeVersionEOL(action *action.Action) (bool, error) {
 		return false, err
 	}
 
-	return version < 18, nil
+	return version < 20, nil
 }

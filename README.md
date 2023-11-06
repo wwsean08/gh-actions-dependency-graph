@@ -24,7 +24,7 @@ gh actions-dependency-graph list-deps testdata/test-workflow.yaml
 ```
 
 ### Scan
-The scan subcommand is used to scan for various potential issues within workflows.  Below is a breakdown of issues and how to address them:
+The `scan` subcommand is used to scan for various potential issues within workflows.  Below is a breakdown of issues and how to address them:
 1. Node Version EOL - Node 16 was marked as EOL in September 2023, so any actions run via Node.js should be upgraded to run on `node20`.
 2. Repo Jacking - Checks if the action is in a repository that is susceptible to [repo](https://blog.aquasec.com/github-dataset-research-reveals-millions-potentially-vulnerable-to-repojacking) [jacking](https://www.paloaltonetworks.com/blog/prisma-cloud/github-actions-worm-dependencies/).  If it is, some contextual information will be provided for how to update it to fix this vulnerability.
 

@@ -8,7 +8,10 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "actions-dependency-graph",
+	Use: "actions-dependency-graph",
+	Annotations: map[string]string{
+		cobra.CommandDisplayNameAnnotation: "gh actions-dependency-graph",
+	},
 	Short: "An application to determine the dependencies of your actions/workflows",
 	Long: `An application that recursively walks actions and workflows to determine 
 the list of dependent actions so you can feel confident in what you're shipping and 

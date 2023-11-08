@@ -8,7 +8,7 @@ import (
 )
 
 func (a *Action) DFSPrint(tab int) {
-	fmt.Println(fmt.Sprintf("%s%s", strings.Repeat("\t", tab), a.Repo))
+	fmt.Printf("%s%s\n", strings.Repeat("\t", tab), a.Repo)
 	if len(a.DependentActions) != 0 {
 		for _, subAction := range a.DependentActions {
 			subAction.DFSPrint(tab + 1)

@@ -56,7 +56,7 @@ func (s *Scanner) Scan(action *action.Action) (results *Results, errs []error) {
 			results.RepoJackingPossible = "false"
 		}
 	}
-	return results, nil
+	return results, errs
 }
 
 func (s *Scanner) FormatResults(results *Results) string {

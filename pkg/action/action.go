@@ -127,6 +127,9 @@ func getActionFromRepoPath(repo, ref, path string) (*string, error) {
 
 	respData := new(contentsData)
 	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	err = json.Unmarshal(respBody, respData)
 	if err != nil {

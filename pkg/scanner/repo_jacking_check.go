@@ -89,5 +89,5 @@ func (s *Scanner) RepoJackingCheck(repo string) *RepoJackingStatus {
 // isRepoSusceptibleToRepoJacking compares the repo to the result and checks if it's susceptible to repo-jacking
 func (s *Scanner) isRepoSusceptibleToRepoJacking(repo string, ghData *ghRepo) bool {
 	repoOwner := strings.Split(repo, "/")[0]
-	return strings.EqualFold(repoOwner, ghData.Owner.Login)
+	return !strings.EqualFold(repoOwner, ghData.Owner.Login)
 }

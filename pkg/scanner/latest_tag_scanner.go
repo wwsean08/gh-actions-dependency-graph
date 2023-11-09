@@ -3,11 +3,11 @@ package scanner
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cli/go-gh/v2/pkg/api"
 	"io"
 	"net/http"
 	"regexp"
 
+	"github.com/cli/go-gh/v2/pkg/api"
 	"github.com/wwsean08/actions-dependency-graph/pkg/action"
 )
 

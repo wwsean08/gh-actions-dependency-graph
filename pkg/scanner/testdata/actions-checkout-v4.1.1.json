@@ -1,0 +1,98 @@
+{
+  "sha": "b4ffde65f46336ab88eb53be808477a3936bae11",
+  "node_id": "C_kwDOC8ppZdoAKGI0ZmZkZTY1ZjQ2MzM2YWI4OGViNTNiZTgwODQ3N2EzOTM2YmFlMTE",
+  "commit": {
+    "author": {
+      "name": "Cory Miller",
+      "email": "13227161+cory-miller@users.noreply.github.com",
+      "date": "2023-10-17T15:52:30Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2023-10-17T15:52:30Z"
+    },
+    "message": "Link to release page from what's new section (#1514)",
+    "tree": {
+      "sha": "b529a979ad6db5bf65b2669398a331d2cb6041cb",
+      "url": "https://api.github.com/repos/actions/checkout/git/trees/b529a979ad6db5bf65b2669398a331d2cb6041cb"
+    },
+    "url": "https://api.github.com/repos/actions/checkout/git/commits/b4ffde65f46336ab88eb53be808477a3936bae11",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsBcBAABCAAQBQJlLq2+CRBK7hj4Ov3rIwAA3lcIACdcrjNzk6kwk3+Sa/bPi7Uy\nEZWhhu7tj4PQuqSLcI2VyyHWuyxGGgaLWv27W/Qk4iXEDv1TEgr+FJ2nOAnJVabP\nZg+PExYab30ZY56wHlGYkka9fc+i/gayGecp2DdSrFdK1jvQRT3RHveHV04h47jB\n7D/M77fIPB0s4Cn3cuABdTm9eg2dtQwbevYj7zmxSxrscqE/x2mCMB6tv4+WWzFF\n05yNzsn9ZeEErQYrrV5UNc8GX1bekoRBM9KgxoT/OXjSqJBq/g62BXhueT1v7ElO\nt3LZF0xwIqU7suzS5FIx9/m+bxH2Ul73fPpByncHxn7mIAENK7hQUYijQgU15Zs=\n=6ZuI\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree b529a979ad6db5bf65b2669398a331d2cb6041cb\nparent 8530928916aaef40f59e6f221989ccb31f5759e7\nauthor Cory Miller <13227161+cory-miller@users.noreply.github.com> 1697557950 -0400\ncommitter GitHub <noreply@github.com> 1697557950 -0400\n\nLink to release page from what's new section (#1514)\n\n"
+    }
+  },
+  "url": "https://api.github.com/repos/actions/checkout/commits/b4ffde65f46336ab88eb53be808477a3936bae11",
+  "html_url": "https://github.com/actions/checkout/commit/b4ffde65f46336ab88eb53be808477a3936bae11",
+  "comments_url": "https://api.github.com/repos/actions/checkout/commits/b4ffde65f46336ab88eb53be808477a3936bae11/comments",
+  "author": {
+    "login": "cory-miller",
+    "id": 13227161,
+    "node_id": "MDQ6VXNlcjEzMjI3MTYx",
+    "avatar_url": "https://avatars.githubusercontent.com/u/13227161?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/cory-miller",
+    "html_url": "https://github.com/cory-miller",
+    "followers_url": "https://api.github.com/users/cory-miller/followers",
+    "following_url": "https://api.github.com/users/cory-miller/following{/other_user}",
+    "gists_url": "https://api.github.com/users/cory-miller/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/cory-miller/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/cory-miller/subscriptions",
+    "organizations_url": "https://api.github.com/users/cory-miller/orgs",
+    "repos_url": "https://api.github.com/users/cory-miller/repos",
+    "events_url": "https://api.github.com/users/cory-miller/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/cory-miller/received_events",
+    "type": "User",
+    "site_admin": true
+  },
+  "committer": {
+    "login": "web-flow",
+    "id": 19864447,
+    "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/web-flow",
+    "html_url": "https://github.com/web-flow",
+    "followers_url": "https://api.github.com/users/web-flow/followers",
+    "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+    "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+    "organizations_url": "https://api.github.com/users/web-flow/orgs",
+    "repos_url": "https://api.github.com/users/web-flow/repos",
+    "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/web-flow/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "8530928916aaef40f59e6f221989ccb31f5759e7",
+      "url": "https://api.github.com/repos/actions/checkout/commits/8530928916aaef40f59e6f221989ccb31f5759e7",
+      "html_url": "https://github.com/actions/checkout/commit/8530928916aaef40f59e6f221989ccb31f5759e7"
+    }
+  ],
+  "stats": {
+    "total": 4,
+    "additions": 1,
+    "deletions": 3
+  },
+  "files": [
+    {
+      "sha": "bfecf464db4e9c2b301bb830dbd8494fe07ffb0d",
+      "filename": "README.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 3,
+      "changes": 4,
+      "blob_url": "https://github.com/actions/checkout/blob/b4ffde65f46336ab88eb53be808477a3936bae11/README.md",
+      "raw_url": "https://github.com/actions/checkout/raw/b4ffde65f46336ab88eb53be808477a3936bae11/README.md",
+      "contents_url": "https://api.github.com/repos/actions/checkout/contents/README.md?ref=b4ffde65f46336ab88eb53be808477a3936bae11",
+      "patch": "@@ -12,9 +12,7 @@ When Git 2.18 or higher is not in your PATH, falls back to the REST API to downl\n \n # What's new\n \n-- Updated default runtime to node20\n-  - This requires a minimum Actions Runner version of [v2.308.0](https://github.com/actions/runner/releases/tag/v2.308.0).\n-- Added support for fetching without the `--progress` option\n+Please refer to the [release page](https://github.com/actions/checkout/releases/latest) for the latest release notes.\n \n # Usage\n "
+    }
+  ]
+}

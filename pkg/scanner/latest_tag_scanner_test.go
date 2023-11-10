@@ -213,3 +213,62 @@ func TestScanner_CheckActionVersionIsLatestReturnsFalse(t *testing.T) {
 	assert.NoError(t, err)
 	assert.False(t, isLatest)
 }
+
+func TestScanner_CheckActionVersionIsLatestReturnsErrOnLatest404(t *testing.T) {
+	defer gock.Off()
+	latestFile, err := os.Open("testdata/actions-checkout-latest.json")
+	require.NoError(t, err)
+	require.NotNil(t, latestFile)
+	commitFile411, err := os.Open("testdata/actions-checkout-v4.1.1.json")
+	require.NoError(t, err)
+	require.NotNil(t, commitFile411)
+	commitFile410, err := os.Open("testdata/actions-checkout-v4.1.0.json")
+	require.NoError(t, err)
+	require.NotNil(t, commitFile410)
+
+	gock.New("https://api.github.com").
+		Get("/repos/actions/checkout/releases/latest").
+		Reply(http.StatusNotFound)
+
+	act := &action.Action{
+		Repo: "actions/checkout",
+		Ref:  "v4.1.0",
+	}
+	scanner := &Scanner{}
+
+	isLatest, err := scanner.CheckActionVersionIsLatest(act)
+	assert.Error(t, err)
+	assert.False(t, isLatest)
+}
+
+func TestScanner_CheckActionVersionIsLatestReturnsErrorGettingVersionForAction(t *testing.T) {
+	defer gock.Off()
+	latestFile, err := os.Open("testdata/actions-checkout-latest.json")
+	require.NoError(t, err)
+	require.NotNil(t, latestFile)
+	commitFile410, err := os.Open("testdata/actions-checkout-v4.1.0.json")
+	require.NoError(t, err)
+	require.NotNil(t, commitFile410)
+
+	gock.New("https://api.github.com").
+		Get("/repos/actions/checkout/releases/latest").
+		Reply(http.StatusOK).
+		Body(latestFile)
+	gock.New("https://api.github.com").
+		Get("/repos/actions/checkout/commits/v4.1.1").
+		Reply(http.StatusNotFound)
+	gock.New("https://api.github.com").
+		Get("/repos/actions/checkout/commits/v4.1.0").
+		Reply(http.StatusOK).
+		Body(commitFile410)
+
+	act := &action.Action{
+		Repo: "actions/checkout",
+		Ref:  "v4.1.0",
+	}
+	scanner := &Scanner{}
+
+	isLatest, err := scanner.CheckActionVersionIsLatest(act)
+	assert.Error(t, err)
+	assert.False(t, isLatest)
+}

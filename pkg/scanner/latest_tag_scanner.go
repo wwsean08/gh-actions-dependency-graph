@@ -18,62 +18,63 @@ var likelySha1, _ = regexp.Compile("^[0-9A-Fa-f]{40}$")
 //
 // The comparison checks the commit sha associated with the two tags to allow for floating
 // tags to be used without having to worry about exact matches of tags.
-func (s *Scanner) CheckActionVersionIsLatest(action *action.Action) (bool, error) {
+func (s *Scanner) CheckActionVersionIsLatest(action *action.Action) (bool, string, error) {
 	if action.Ref == "" {
-		return false, LocalActionError
+		return false, "", LocalActionError
 	}
 	if likelySha1Sum(action.Ref) {
-		return false, LikelyShaError
+		return false, "", LikelyShaError
 	}
 
 	client, err := api.DefaultHTTPClient()
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
 	shaNow, err := getShaForRef(action.Repo, action.Ref, client)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
-	shaLatest, err := getShaForLatestRelease(action, client)
+	shaLatest, tag, err := getShaForLatestRelease(action, client)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
-	return shaNow == shaLatest, nil
+	return shaNow == shaLatest, tag, nil
 }
 
 // getShaForLatestRelease takes an action and client, and gets the commit sha for the latest
 // release according to GitHub's release API
-func getShaForLatestRelease(action *action.Action, client *http.Client) (string, error) {
+func getShaForLatestRelease(action *action.Action, client *http.Client) (string, string, error) {
 	type data struct {
 		TagName string `json:"tag_name"`
 	}
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://api.github.com/repos/%s/releases/latest", action.Repo), nil)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("http error occurred: %d", resp.StatusCode)
+		return "", "", fmt.Errorf("http error occurred: %d", resp.StatusCode)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	tagData := new(data)
 	err = json.Unmarshal(body, tagData)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
+	sha, err := getShaForRef(action.Repo, tagData.TagName, client)
 
-	return getShaForRef(action.Repo, tagData.TagName, client)
+	return sha, tagData.TagName, err
 }
 
 // getShaForRef takes a repo, ref, and http client, and retrieves the sha commit sha for that reference

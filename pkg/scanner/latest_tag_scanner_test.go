@@ -45,18 +45,20 @@ func TestLikelySha1Sum(t *testing.T) {
 func TestScanner_CheckActionVersionIsLatestWithBlankAction(t *testing.T) {
 	act := new(action.Action)
 	scanner := Scanner{}
-	isLatest, err := scanner.CheckActionVersionIsLatest(act)
+	isLatest, tag, err := scanner.CheckActionVersionIsLatest(act)
 	require.EqualErrorf(t, err, LocalActionError.Error(), "")
 	require.False(t, isLatest)
+	assert.Zero(t, tag)
 }
 
 func TestScanner_CheckActionVersionIsLatestWithHashReturnsError(t *testing.T) {
 	act := new(action.Action)
 	act.Ref = "ea2ef62537500fb1ef526076b41a088420e6835a"
 	scanner := Scanner{}
-	isLatest, err := scanner.CheckActionVersionIsLatest(act)
+	isLatest, tag, err := scanner.CheckActionVersionIsLatest(act)
 	require.EqualError(t, err, LikelyShaError.Error())
 	require.False(t, isLatest)
+	assert.Zero(t, tag)
 }
 
 func TestGetShaForLatestReleaseReturnsErrOnNon200(t *testing.T) {
@@ -71,9 +73,10 @@ func TestGetShaForLatestReleaseReturnsErrOnNon200(t *testing.T) {
 	client, err := api.DefaultHTTPClient()
 	require.NoError(t, err)
 
-	sha, err := getShaForLatestRelease(act, client)
+	sha, tag, err := getShaForLatestRelease(act, client)
 	assert.Error(t, err)
 	assert.Zero(t, sha)
+	assert.Zero(t, tag)
 }
 
 func TestGetShaForLatestReleaseReturnsErrOnNon200ForGetSha(t *testing.T) {
@@ -95,9 +98,10 @@ func TestGetShaForLatestReleaseReturnsErrOnNon200ForGetSha(t *testing.T) {
 	client, err := api.DefaultHTTPClient()
 	require.NoError(t, err)
 
-	sha, err := getShaForLatestRelease(act, client)
+	sha, tag, err := getShaForLatestRelease(act, client)
 	assert.Error(t, err)
 	assert.Zero(t, sha)
+	assert.Equal(t, "v4.1.1", tag)
 }
 
 func TestGetShaForLatestReleaseReturnsSha(t *testing.T) {
@@ -124,9 +128,10 @@ func TestGetShaForLatestReleaseReturnsSha(t *testing.T) {
 	client, err := api.DefaultHTTPClient()
 	require.NoError(t, err)
 
-	sha, err := getShaForLatestRelease(act, client)
+	sha, tag, err := getShaForLatestRelease(act, client)
 	assert.NoError(t, err)
 	assert.Equal(t, "b4ffde65f46336ab88eb53be808477a3936bae11", sha)
+	assert.Equal(t, "v4.1.1", tag)
 }
 
 func TestGetShaForRefReturnsRef(t *testing.T) {
@@ -173,9 +178,10 @@ func TestScanner_CheckActionVersionIsLatestReturnsTrue(t *testing.T) {
 	}
 	scanner := &Scanner{}
 
-	isLatest, err := scanner.CheckActionVersionIsLatest(act)
+	isLatest, tag, err := scanner.CheckActionVersionIsLatest(act)
 	assert.NoError(t, err)
 	assert.True(t, isLatest)
+	assert.Equal(t, "v4.1.1", tag)
 }
 
 func TestScanner_CheckActionVersionIsLatestReturnsFalse(t *testing.T) {
@@ -209,9 +215,10 @@ func TestScanner_CheckActionVersionIsLatestReturnsFalse(t *testing.T) {
 	}
 	scanner := &Scanner{}
 
-	isLatest, err := scanner.CheckActionVersionIsLatest(act)
+	isLatest, tag, err := scanner.CheckActionVersionIsLatest(act)
 	assert.NoError(t, err)
 	assert.False(t, isLatest)
+	assert.Equal(t, "v4.1.1", tag)
 }
 
 func TestScanner_CheckActionVersionIsLatestReturnsErrOnLatest404(t *testing.T) {
@@ -236,9 +243,10 @@ func TestScanner_CheckActionVersionIsLatestReturnsErrOnLatest404(t *testing.T) {
 	}
 	scanner := &Scanner{}
 
-	isLatest, err := scanner.CheckActionVersionIsLatest(act)
+	isLatest, tag, err := scanner.CheckActionVersionIsLatest(act)
 	assert.Error(t, err)
 	assert.False(t, isLatest)
+	assert.Zero(t, tag)
 }
 
 func TestScanner_CheckActionVersionIsLatestReturnsErrorGettingVersionForAction(t *testing.T) {
@@ -268,7 +276,8 @@ func TestScanner_CheckActionVersionIsLatestReturnsErrorGettingVersionForAction(t
 	}
 	scanner := &Scanner{}
 
-	isLatest, err := scanner.CheckActionVersionIsLatest(act)
+	isLatest, tag, err := scanner.CheckActionVersionIsLatest(act)
 	assert.Error(t, err)
 	assert.False(t, isLatest)
+	assert.Zero(t, tag)
 }

@@ -11,19 +11,24 @@ import (
 type Scanner struct {
 	ScanNodeVersionEOL bool
 	RepoJackingScan    bool
+	LatestTagScan      bool
 }
 
 type Results struct {
-	Action              string
-	NodeVersionEOL      string
-	RepoJackingPossible string
-	RepoJackingComment  string
+	Action                   string
+	NodeVersionEOL           string
+	RepoJackingPossible      string
+	RepoJackingComment       string
+	LatestTagIsCurrentLatest bool
+	LatestTagTag             string
+	LatestTagError           string
 }
 
 func NewDefaultScanner() *Scanner {
 	return &Scanner{
 		ScanNodeVersionEOL: true,
 		RepoJackingScan:    true,
+		LatestTagScan:      true,
 	}
 }
 
@@ -56,6 +61,15 @@ func (s *Scanner) Scan(action *action.Action) (results *Results, errs []error) {
 			results.RepoJackingPossible = "false"
 		}
 	}
+
+	if s.LatestTagScan {
+		var err error
+		results.LatestTagIsCurrentLatest, results.LatestTagTag, err = s.CheckActionVersionIsLatest(action)
+		if err != nil {
+			results.LatestTagError = err.Error()
+		}
+	}
+
 	return results, errs
 }
 
@@ -77,5 +91,14 @@ func (s *Scanner) FormatResults(results *Results) string {
 	} else {
 		sb.WriteString("Not Scanned\n")
 	}
+
+	sb.WriteString(fmt.Sprintf("Is Referencing Latest Tag: %t\n", results.LatestTagIsCurrentLatest))
+	if results.LatestTagTag != "" {
+		sb.WriteString(fmt.Sprintf("The latest tag for %s is %s\n", results.Action, results.LatestTagTag))
+	}
+	if results.LatestTagError != "" {
+		sb.WriteString(fmt.Sprintf("Error getting latest tag: %s\n", results.LatestTagError))
+	}
+
 	return sb.String()
 }

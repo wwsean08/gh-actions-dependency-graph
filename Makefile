@@ -20,6 +20,11 @@ audit:
 # DEVELOPMENT
 # ==================================================================================== #
 
+## lint: use golanci-lint to lint the app
+.PHONY: lint
+lint:
+	golangci-lint run
+
 ## test: run all tests
 .PHONY: test
 test:
